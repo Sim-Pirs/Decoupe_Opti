@@ -3,13 +3,13 @@ import java.util.List;
 
 public class DecoupeOpti {
 
-    int nbCol = 4;
+    int nbCol = 0; // au début
     int nbRows = 4;
 
     int valueConstraint[] = { 97, 610, 395, 211 };
 
-     List<List<Integer>> matriceXi = new ArrayList<>();
-    private List<Integer> coefXi;
+    private List<List<Integer>> matriceXi = new ArrayList<>();
+     List<Integer> coefXi = new ArrayList<>();
 
     public DecoupeOpti (List<List<Integer>> matriceXi, List<Integer> coefXi){
 
@@ -23,9 +23,10 @@ public class DecoupeOpti {
 
     public void addXjtoXi(List<Integer> xj){
         matriceXi.add(xj);
+        nbCol++;
     }
 
-    public void addCoefXjtocoefXi(int coefXj){
+    public void addCoefXjtoListXi(int coefXj){
         coefXi.add(coefXj);
     }
 

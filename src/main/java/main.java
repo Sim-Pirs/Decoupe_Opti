@@ -23,7 +23,6 @@ public class main {
             /* init la matrice et la liste des coef
 
             - init matrice de base x1 x2 x3 x4 */
-
             DecoupeOpti decoupeOpti = new DecoupeOpti();
 
             List<Integer> x1 = new ArrayList<>();
@@ -57,7 +56,13 @@ public class main {
             /*fin init matrice*/
 
             /*init la liste des coeff : case 0 = x1, case 1 = x2 .....*/
+            for(int i=0; i<decoupeOpti.nbCol;i++){
+                decoupeOpti.addCoefXjtoListXi(1);
+            }
 
+            for(int i=0; i<decoupeOpti.nbCol; i++)
+                System.out.println(decoupeOpti.coefXi.get(i));
+            /*fin init les coefs*/
 
 
 
