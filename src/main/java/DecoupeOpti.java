@@ -8,8 +8,8 @@ public class DecoupeOpti {
 
     int valueConstraint[] = { 97, 610, 395, 211 };
 
-    private List<List<Integer>> matriceXi = new ArrayList<>();
-     List<Integer> coefXi = new ArrayList<>();
+    List<List<Integer>> matriceXi = new ArrayList<>();
+    List<Integer> coefXi = new ArrayList<>();
 
     public DecoupeOpti (List<List<Integer>> matriceXi, List<Integer> coefXi){
 

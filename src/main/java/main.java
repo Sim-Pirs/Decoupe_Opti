@@ -64,8 +64,6 @@ public class main {
                 System.out.println(decoupeOpti.coefXi.get(i));
             /*fin init les coefs*/
 
-
-
             try{
                 //On créé le probleme
                 lp = GLPK.glp_create_prob();
@@ -83,34 +81,30 @@ public class main {
                 }
 
                 ind = GLPK.new_intArray(nbCol+1); //stocker les indices
+                for(int k=0; k<decoupeOpti.matriceXi.size();k++){
+                    GLPK.intArray_setitem(ind, k, k );
+                }
                 SWIGTYPE_p_double val = GLPK.new_doubleArray(nbCol + 1); //stocker les valeurs
 
 
                 // Create constraints
-                GLPK.glp_add_rows(lp, nbRows);
-                for(int i = 0; i < nbRows; i++){
-                    GLPK.glp_set_row_name(lp, i, "c"+Integer.toString(i));
-     //warning                GLPK.glp_set_row_bnds(lp, 1, GLPKConstants.GLP_LO, valueConstraint[i], 0);
-                    for(int j=0;i<nbCol;j++){
+               GLPK.glp_add_rows(lp, nbRows);
+                for(int i = 0; i < nbRows; i++) {
+                    GLPK.glp_set_row_name(lp, i, "c" + Integer.toString(i));
+                    GLPK.glp_set_row_bnds(lp, 1, GLPKConstants.GLP_LO, decoupeOpti.valueConstraint[i], 0);
 
+                    for (int j = 0; j < decoupeOpti.matriceXi.size(); j++) {
+                        GLPK.doubleArray_setitem(val, j, decoupeOpti.valueConstraint[j]);
                     }
+                    GLPK.glp_set_mat_row(lp,i,decoupeOpti.matriceXi.size(),ind,val);
 
-                    ind = GLPK.new_intArray(3);
-                    GLPK.intArray_setitem(ind, 1, 1);
-                    GLPK.intArray_setitem(ind, 2, 2);
-                    /*val = GLPK.new_doubleArray(3);
-                    GLPK.doubleArray_setitem(val, 1, 1.);
-                    GLPK.doubleArray_setitem(val, 2, -1.);
-                    GLPK.glp_set_mat_row(lp, 1, 2, ind, val);*/
                 }
 
+                // Fin des contraintes
 
-                // Define objective
-                GLPK.glp_set_obj_name(lp, "z");
+                // fonction objective z
+
                 GLPK.glp_set_obj_dir(lp, GLPKConstants.GLP_MIN);
-                GLPK.glp_set_obj_coef(lp, 0, 1.);
-                GLPK.glp_set_obj_coef(lp, 1, -.5);
-                GLPK.glp_set_obj_coef(lp, 2, .5);
 
             } catch (GlpkException ex){
                 ex.printStackTrace();
