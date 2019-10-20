@@ -102,9 +102,11 @@ public class main {
 
                 // Fin des contraintes
 
-                // fonction objective z
+                // fonction objectif z
 
                 GLPK.glp_set_obj_dir(lp, GLPKConstants.GLP_MIN);
+
+                // fin fonction objectif z
 
             } catch (GlpkException ex){
                 ex.printStackTrace();
