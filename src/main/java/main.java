@@ -108,6 +108,19 @@ public class main {
 
                 // fin fonction objectif z
 
+                GLPK.delete_intArray(ind);
+                GLPK.delete_doubleArray(val);
+
+                // dual :
+
+                List <Double> dual = new ArrayList<>();
+
+                for(int i=0; i<decoupeOpti.matriceXi.size();i++){
+                    dual.add(GLPK.glp_get_row_dual(lp,i));
+                }
+
+
+
             } catch (GlpkException ex){
                 ex.printStackTrace();
             }
