@@ -87,7 +87,7 @@ public class main {
                     GLPK.glp_set_row_bnds(lp, i, GLPKConstants.GLP_FX, decoupeOpti.valueConstraint[i-1], decoupeOpti.valueConstraint[i-1]);
 
                     for (int j = 1; j <= decoupeOpti.matriceXi.size(); j++) {
-                        GLPK.doubleArray_setitem(val, j, decoupeOpti.matriceXi.get(i-1).get(j-1));
+                        GLPK.doubleArray_setitem(val, i, decoupeOpti.matriceXi.get(i-1).get(j-1));
                     }
                     GLPK.glp_set_mat_row(lp,i,decoupeOpti.matriceXi.size()-1,ind,val);
                 }
@@ -100,6 +100,10 @@ public class main {
 
                     GLPK.glp_set_obj_name(lp, "z");
                     GLPK.glp_set_obj_dir(lp, GLPKConstants.GLP_MIN);
+
+                    for(int i = 0; i < decoupeOpti.valueConstraint.length; i++){
+                        GLPK.glp_set_obj_coef(lp, i, 1);
+                    }
 
                     // fin
 
