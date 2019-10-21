@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Decoupe_Opti" />
+        <module name="Decoupe_OptiVF" />
       </profile>
     </annotationProcessing>
   </component>
