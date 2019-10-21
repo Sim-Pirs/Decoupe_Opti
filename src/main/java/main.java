@@ -1,6 +1,7 @@
 import org.gnu.glpk.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /*
@@ -12,7 +13,6 @@ VM options path:
 
 public class main {
         public static void main(String[] args) {
-            System.out.println( GLPK.glp_version());
             glp_prob lp;
             //glp_smcp parm;
             SWIGTYPE_p_int ind;
@@ -25,32 +25,16 @@ public class main {
             - init matrice de base x1 x2 x3 x4 */
             DecoupeOpti decoupeOpti = new DecoupeOpti();
 
-            List<Integer> x1 = new ArrayList<>();
-            x1.add(2);
-            x1.add(0);
-            x1.add(0);
-            x1.add(0);
+            ArrayList<Integer> x1 = new ArrayList<Integer>(Arrays.asList(2,0,0,0));
             decoupeOpti.addXjtoXi(x1);
 
-            List<Integer> x2 = new ArrayList<>();
-            x1.add(0);
-            x1.add(2);
-            x1.add(0);
-            x1.add(0);
+            ArrayList<Integer> x2 = new ArrayList<Integer>(Arrays.asList(0,2,0,0));
             decoupeOpti.addXjtoXi(x2);
 
-            List<Integer> x3 = new ArrayList<>();
-            x1.add(0);
-            x1.add(0);
-            x1.add(3);
-            x1.add(0);
+            ArrayList<Integer> x3 = new ArrayList<Integer>(Arrays.asList(0,0,3,0));
             decoupeOpti.addXjtoXi(x3);
 
-            List<Integer> x4 = new ArrayList<>();
-            x1.add(0);
-            x1.add(0);
-            x1.add(0);
-            x1.add(7);
+            ArrayList<Integer> x4 = new ArrayList<Integer>(Arrays.asList(0,0,0,7));
             decoupeOpti.addXjtoXi(x4);
 
             /*fin init matrice*/
@@ -60,9 +44,14 @@ public class main {
                 decoupeOpti.addCoefXjtoListXi(1);
             }
 
-            for(int i=0; i<decoupeOpti.nbCol; i++)
-                System.out.println(decoupeOpti.coefXi.get(i));
             /*fin init les coefs*/
+
+     /*       for(int i = 0;i<nbCol; i++){
+                System.out.println("");
+                for(int j=0; j<nbRows; j++){
+                    System.out.print(decoupeOpti.matriceXi.get(i).get(j));
+                }
+            }*/
 
             try{
                 //On créé le probleme
@@ -73,7 +62,7 @@ public class main {
                 //Colonnes
                 GLPK.glp_add_cols(lp, nbCol);
 
-                for(int i=0; i < nbCol; i++)
+                for(int i=1; i <= nbCol; i++)
                 {
                     GLPK.glp_set_col_name(lp, 1, "x" + Integer.toString(i));
                     GLPK.glp_set_col_kind(lp, 1, GLPKConstants.GLP_CV); //Type de la colonne
@@ -87,17 +76,16 @@ public class main {
                 SWIGTYPE_p_double val = GLPK.new_doubleArray(nbCol + 1); //stocker les valeurs
 
 
-                // Create constraints
+               // Create constraints
                GLPK.glp_add_rows(lp, nbRows);
-                for(int i = 0; i < nbRows; i++) {
-                    GLPK.glp_set_row_name(lp, i, "c" + Integer.toString(i));
-                    GLPK.glp_set_row_bnds(lp, 1, GLPKConstants.GLP_LO, decoupeOpti.valueConstraint[i], 0);
+                for(int i = 1; i <= nbRows; i++) {
+                    GLPK.glp_set_row_name(lp, i, "c"+i);
+                    GLPK.glp_set_row_bnds(lp, 1, GLPKConstants.GLP_LO, decoupeOpti.valueConstraint[i-1], 0);
 
-                    for (int j = 0; j < decoupeOpti.matriceXi.size(); j++) {
-                        GLPK.doubleArray_setitem(val, j, decoupeOpti.valueConstraint[j]);
+                    for (int j = 1; j <= decoupeOpti.matriceXi.size(); j++) {
+                        GLPK.doubleArray_setitem(val, j, decoupeOpti.matriceXi.get(i-1).get(j-1)); ///////////////////////////////// /!\ check si i-1 j-1 ou j-1 i-1
                     }
-                    GLPK.glp_set_mat_row(lp,i,decoupeOpti.matriceXi.size(),ind,val);
-
+                    GLPK.glp_set_mat_row(lp,i,decoupeOpti.matriceXi.size()-1,ind,val);
                 }
 
                 // Fin des contraintes
@@ -108,6 +96,8 @@ public class main {
 
                 // fin fonction objectif z
 
+                System.out.println(val);
+
                 GLPK.delete_intArray(ind);
                 GLPK.delete_doubleArray(val);
 
@@ -115,7 +105,7 @@ public class main {
 
                 List <Double> dual = new ArrayList<>();
 
-                for(int i=0; i<decoupeOpti.matriceXi.size();i++){
+                for(int i=1; i<=decoupeOpti.matriceXi.size();i++){
                     dual.add(GLPK.glp_get_row_dual(lp,i));
                 }
 
