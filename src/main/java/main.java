@@ -21,6 +21,9 @@ public class main {
             int nbCol = 4;
             int nbRows = 4;
 
+            List <Double> dual = new ArrayList<>();
+            List resultat = new ArrayList();
+
             /* init la matrice et la liste des coef
 
             - init matrice de base x1 x2 x3 x4 */
@@ -89,46 +92,52 @@ public class main {
                     GLPK.glp_set_mat_row(lp,i,decoupeOpti.matriceXi.size()-1,ind,val);
                 }
 
-                // Fin des contraintes
+                while(true) {
 
-                // fonction objectif z
+                    // Fin des contraintes
 
-                GLPK.glp_set_obj_name(lp, "z");
-                GLPK.glp_set_obj_dir(lp, GLPKConstants.GLP_MIN);
+                    // fonction objectif z
 
-                // fin
+                    GLPK.glp_set_obj_name(lp, "z");
+                    GLPK.glp_set_obj_dir(lp, GLPKConstants.GLP_MIN);
 
-             //   GLPK.glp_write_sol(lp, "p");
-               // GLPK.glp_delete_prob(lp);
-                // fin fonction objectif z
+                    // fin
+
+                    //   GLPK.glp_write_sol(lp, "p");
+                    // GLPK.glp_delete_prob(lp);
+                    // fin fonction objectif z
 
 
-                System.out.println(val);
+                    System.out.println(val);
 
-                GLPK.delete_intArray(ind);
-                GLPK.delete_doubleArray(val);
+                    GLPK.delete_intArray(ind);
+                    GLPK.delete_doubleArray(val);
 
-                // dual :
+                    // dual :
 
-                List <Double> dual = new ArrayList<>();
+                    for (int i = 1; i <= decoupeOpti.matriceXi.size(); i++) {
+                        dual.add(GLPK.glp_get_row_dual(lp, i));
+                    }
 
-                for(int i=1; i<=decoupeOpti.matriceXi.size();i++){
-                    dual.add(GLPK.glp_get_row_dual(lp,i));
-                }
+                    SacADos sac = new SacADos(dual);
 
-                SacADos sac = new SacADos(dual);
+                    resultat = sac.run();
 
-                if(sac.run() <= 1){
-                    //break; //TODO enlever le commentaire quand on aura créé la boucle
+                    if (sac.calcul() <= 1) {
+                        break;
+                    } else {
+                        GLPK.glp_add_cols(lp, 1);
+                        nbCol++;
+                    }
                 }
 
                 //Continue si strictement supérieur
 
-
+                GLPK.glp_write_sol(lp, "p");
+                GLPK.glp_delete_prob(lp);
 
             } catch (GlpkException ex){
                 ex.printStackTrace();
             }
         }
-
 }

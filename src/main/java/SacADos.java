@@ -6,17 +6,17 @@ import java.util.List;
 public class SacADos {
 
     List<Double> dual;
+    List<Double> result;
    // ArrayList<Double> yi;
 
     int coefConstraint[] = { 45, 36, 31, 14 };
 
     public SacADos(List <Double> dual){
-        //yi = new ArrayList<>();
         this.dual = dual;
+        result = new ArrayList<>();
     }
 
-    public double run (){
-        double resultat = 0;
+    public List<Double> run (){
         SWIGTYPE_p_int ind;
 
         glp_prob s = GLPK.glp_create_prob();
@@ -52,14 +52,21 @@ public class SacADos {
         GLPK.glp_set_obj_name(s, "z'");
         GLPK.glp_set_obj_dir(s, GLPKConstants.GLP_MAX);
 
-        List <Double> result = new ArrayList<>();
-
         for(int i=1; i<=dual.size();i++){
             result.add(GLPK.glp_get_row_prim(s,i));
         }
 
+        GLPK.delete_intArray(ind);
+        GLPK.delete_doubleArray(val);
 
+        return result;
+    }
 
-        return resultat;
+    double calcul(){
+        double somme = 0;
+        for(int i=0; i < dual.size(); i++){
+            somme += coefConstraint[i] * result.get(i);
+        }
+        return somme;
     }
 }
