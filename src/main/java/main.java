@@ -87,7 +87,7 @@ public class main {
                     GLPK.glp_set_row_bnds(lp, 1, GLPKConstants.GLP_LO, decoupeOpti.valueConstraint[i-1], 0);
 
                     for (int j = 1; j <= decoupeOpti.matriceXi.size(); j++) {
-                        GLPK.doubleArray_setitem(val, j, decoupeOpti.matriceXi.get(i-1).get(j-1)); //TODO/////////////////////////////// /!\ check si i-1 j-1 ou j-1 i-1
+                        GLPK.doubleArray_setitem(val, j, decoupeOpti.matriceXi.get(i-1).get(j-1));
                     }
                     GLPK.glp_set_mat_row(lp,i,decoupeOpti.matriceXi.size()-1,ind,val);
                 }
@@ -128,6 +128,9 @@ public class main {
                     } else {
                         GLPK.glp_add_cols(lp, 1);
                         nbCol++;
+                        GLPK.glp_set_col_name(lp, 1, "x" + Integer.toString(nbCol-1));
+                        GLPK.glp_set_col_kind(lp, 1, GLPKConstants.GLP_CV); //Type de la colonne
+                        GLPK.glp_set_col_bnds(lp, 1, GLPKConstants.GLP_DB,0,0); // Bornes inf et sup
                     }
                 }
 

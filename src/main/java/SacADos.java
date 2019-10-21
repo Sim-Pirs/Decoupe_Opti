@@ -31,7 +31,7 @@ public class SacADos {
         {
             GLPK.glp_set_col_name(s, 1, "a" + Integer.toString(i));
             GLPK.glp_set_col_kind(s, 1, GLPKConstants.GLP_CV); //Type de la colonne
-            GLPK.glp_set_col_bnds(s, 1, GLPKConstants.GLP_DB,0,0); // Bornes inf et sup
+            GLPK.glp_set_col_bnds(s, 1, GLPKConstants.GLP_DB,0, Double.POSITIVE_INFINITY); // Bornes inf et sup
         }
 
         ind = GLPK.new_intArray(dual.size()+1); //stocker les indices
@@ -66,7 +66,7 @@ public class SacADos {
 
     double calcul(){
         double somme = 0;
-        for(int i=0; i < dual.size(); i++){
+        for(int i=0; i < result.size(); i++){
             somme += coefConstraint[i] * result.get(i);
         }
         return somme;
