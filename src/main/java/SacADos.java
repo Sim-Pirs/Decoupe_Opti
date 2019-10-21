@@ -18,6 +18,8 @@ public class SacADos {
 
     public List<Double> run (){
         SWIGTYPE_p_int ind;
+        glp_smcp parm;
+        int ret;
 
         glp_prob s = GLPK.glp_create_prob();
         GLPK.glp_set_prob_name(s, "S");
@@ -44,16 +46,16 @@ public class SacADos {
         GLPK.glp_set_row_name(s, 1, "c"+1);
         GLPK.glp_set_row_bnds(s, 1, GLPKConstants.GLP_LO, 100, 0);
 
-        for (int j = 1; j <= dual.size(); j++) {
-                GLPK.doubleArray_setitem(val, j, dual.get(j-1));
-        }
-
         GLPK.glp_set_mat_row(s,1,dual.size()-1,ind,val);
         GLPK.glp_set_obj_name(s, "z'");
         GLPK.glp_set_obj_dir(s, GLPKConstants.GLP_MAX);
 
-        for(int i=1; i<=dual.size();i++){
-            result.add(GLPK.glp_get_row_prim(s,i));
+        parm = new glp_smcp();
+        GLPK.glp_init_smcp(parm);
+        ret = GLPK.glp_simplex(s, parm);
+
+        if(ret != 0){
+            System.out.println("The problem could not be solved yeaaah");
         }
 
         GLPK.delete_intArray(ind);
