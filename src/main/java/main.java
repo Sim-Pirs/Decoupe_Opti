@@ -70,7 +70,7 @@ public class main {
                 {
                     GLPK.glp_set_col_name(lp, 1, "x" + Integer.toString(i));
                     GLPK.glp_set_col_kind(lp, 1, GLPKConstants.GLP_CV); //Type de la colonne
-                    GLPK.glp_set_col_bnds(lp, 1, GLPKConstants.GLP_DB,0,0); // Bornes inf et sup
+                    GLPK.glp_set_col_bnds(lp, 1, GLPKConstants.GLP_DB,0,Double.POSITIVE_INFINITY); // Bornes inf et sup
                 }
 
                 ind = GLPK.new_intArray(nbCol+1); //stocker les indices
@@ -84,7 +84,7 @@ public class main {
                GLPK.glp_add_rows(lp, nbRows);
                 for(int i = 1; i <= nbRows; i++) {
                     GLPK.glp_set_row_name(lp, i, "c"+i);
-                    GLPK.glp_set_row_bnds(lp, 1, GLPKConstants.GLP_LO, decoupeOpti.valueConstraint[i-1], 0);
+                    GLPK.glp_set_row_bnds(lp, 1, GLPKConstants.GLP_LO, decoupeOpti.valueConstraint[i-1], Double.POSITIVE_INFINITY);
 
                     for (int j = 1; j <= decoupeOpti.matriceXi.size(); j++) {
                         GLPK.doubleArray_setitem(val, j, decoupeOpti.matriceXi.get(i-1).get(j-1));
