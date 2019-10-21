@@ -29,9 +29,9 @@ public class SacADos {
 
         for(int i=1; i <= dual.size(); i++)
         {
-            GLPK.glp_set_col_name(s, 1, "a" + Integer.toString(i));
-            GLPK.glp_set_col_kind(s, 1, GLPKConstants.GLP_CV); //Type de la colonne
-            GLPK.glp_set_col_bnds(s, 1, GLPKConstants.GLP_DB,0, Double.POSITIVE_INFINITY); // Bornes inf et sup
+            GLPK.glp_set_col_name(s, i, "a" + Integer.toString(i));
+            GLPK.glp_set_col_kind(s, i, GLPKConstants.GLP_CV); //Type de la colonne
+            GLPK.glp_set_col_bnds(s, i, GLPKConstants.GLP_DB,0, Double.POSITIVE_INFINITY); // Bornes inf et sup
         }
 
         ind = GLPK.new_intArray(dual.size()+1); //stocker les indices
@@ -44,11 +44,15 @@ public class SacADos {
         GLPK.glp_add_rows(s, 1);
 
         GLPK.glp_set_row_name(s, 1, "c"+1);
-        GLPK.glp_set_row_bnds(s, 1, GLPKConstants.GLP_LO, 0, 100);
+        GLPK.glp_set_row_bnds(s, 1, GLPKConstants.GLP_DB, 0, 100);
 
         GLPK.glp_set_mat_row(s,1,dual.size()-1,ind,val);
         GLPK.glp_set_obj_name(s, "z'");
         GLPK.glp_set_obj_dir(s, GLPKConstants.GLP_MAX);
+
+        for(int i = 0; i < coefConstraint.length; i++){
+            GLPK.glp_set_obj_coef(s, i, coefConstraint[i]);
+        }
 
         parm = new glp_smcp();
         GLPK.glp_init_smcp(parm);

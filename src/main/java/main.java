@@ -68,9 +68,9 @@ public class main {
 
                 for(int i=1; i <= nbCol; i++)
                 {
-                    GLPK.glp_set_col_name(lp, 1, "x" + Integer.toString(i));
-                    GLPK.glp_set_col_kind(lp, 1, GLPKConstants.GLP_CV); //Type de la colonne
-                    GLPK.glp_set_col_bnds(lp, 1, GLPKConstants.GLP_DB,0,Double.POSITIVE_INFINITY); // Bornes inf et sup
+                    GLPK.glp_set_col_name(lp, i, "x" + Integer.toString(i));
+                    GLPK.glp_set_col_kind(lp, i, GLPKConstants.GLP_CV); //Type de la colonne
+                    GLPK.glp_set_col_bnds(lp, i, GLPKConstants.GLP_DB,0,Double.POSITIVE_INFINITY); // Bornes inf et sup
                 }
 
                 ind = GLPK.new_intArray(nbCol+1); //stocker les indices
@@ -84,7 +84,7 @@ public class main {
                GLPK.glp_add_rows(lp, nbRows);
                 for(int i = 1; i <= nbRows; i++) {
                     GLPK.glp_set_row_name(lp, i, "c"+i);
-                    GLPK.glp_set_row_bnds(lp, 1, GLPKConstants.GLP_LO, decoupeOpti.valueConstraint[i-1], Double.POSITIVE_INFINITY);
+                    GLPK.glp_set_row_bnds(lp, i, GLPKConstants.GLP_FX, decoupeOpti.valueConstraint[i-1], decoupeOpti.valueConstraint[i-1]);
 
                     for (int j = 1; j <= decoupeOpti.matriceXi.size(); j++) {
                         GLPK.doubleArray_setitem(val, j, decoupeOpti.matriceXi.get(i-1).get(j-1));
@@ -128,9 +128,10 @@ public class main {
                     } else {
                         GLPK.glp_add_cols(lp, 1);
                         nbCol++;
-                        GLPK.glp_set_col_name(lp, 1, "x" + Integer.toString(nbCol-1));
-                        GLPK.glp_set_col_kind(lp, 1, GLPKConstants.GLP_CV); //Type de la colonne
-                        GLPK.glp_set_col_bnds(lp, 1, GLPKConstants.GLP_DB,0,0); // Bornes inf et sup
+                        GLPK.glp_set_col_name(lp, nbCol, "x" + Integer.toString(nbCol));
+                        GLPK.glp_set_col_kind(lp, nbCol, GLPKConstants.GLP_CV); //Type de la colonne
+                        GLPK.glp_set_col_bnds(lp, nbCol, GLPKConstants.GLP_DB,0,Double.POSITIVE_INFINITY); // Bornes inf et sup
+                        decoupeOpti.addXjtoXi(resultat);
                     }
                 }
 
