@@ -117,9 +117,6 @@ public class main {
                     // GLPK.glp_delete_prob(lp);
                     // fin fonction objectif z
 
-
-                    System.out.println(val);
-
                     GLPK.delete_intArray(ind);
                     GLPK.delete_doubleArray(val);
 
@@ -140,10 +137,8 @@ public class main {
                         nbCol++;
                         GLPK.glp_set_col_name(lp, nbCol, "x" + Integer.toString(nbCol));
                         GLPK.glp_set_col_kind(lp, nbCol, GLPKConstants.GLP_CV); //Type de la colonne
-                        GLPK.glp_set_col_bnds(lp, nbCol, GLPKConstants.GLP_DB,0,Double.POSITIVE_INFINITY); // Bornes inf et sup
+                        GLPK.glp_set_col_bnds(lp, nbCol, GLPKConstants.GLP_LO,0,0); // Bornes inf et sup
                         decoupeOpti.addXjtoXi(resultat);
-
-
                     }
                 }
 

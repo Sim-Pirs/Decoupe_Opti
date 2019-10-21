@@ -9,7 +9,7 @@ public class SacADos {
     List<Double> result;
    // ArrayList<Double> yi;
 
-    int coefConstraint[] = { 45, 36, 31, 14 };
+    double coefConstraint[] = { 45, 36, 31, 14 };
 
     public SacADos(List <Double> dual){
         this.dual = dual;
@@ -31,7 +31,7 @@ public class SacADos {
         {
             GLPK.glp_set_col_name(s, i, "a" + Integer.toString(i));
             GLPK.glp_set_col_kind(s, i, GLPKConstants.GLP_CV); //Type de la colonne
-            GLPK.glp_set_col_bnds(s, i, GLPKConstants.GLP_DB,0, Double.POSITIVE_INFINITY); // Bornes inf et sup
+            GLPK.glp_set_col_bnds(s, i, GLPKConstants.GLP_LO,0, 0); // Bornes inf et sup
         }
 
         ind = GLPK.new_intArray(dual.size()+1); //stocker les indices
@@ -57,10 +57,15 @@ public class SacADos {
         parm = new glp_smcp();
         GLPK.glp_init_smcp(parm);
         ret = GLPK.glp_simplex(s, parm);
+        if (ret != 0) {
+            System.out.println("The problem could not be solved");
+        }
 
         for(int i=1;i<=dual.size();i++){
             result.add(GLPK.glp_mip_col_val(s,i));
         }
+        for(int i = 0; i < result.size(); i++)
+            System.out.println(result.get(i));
 
         //result = [0.0, 0.0, 0.0, 0.0] ici donc le add foncitonne mais pas les valeurs
 
