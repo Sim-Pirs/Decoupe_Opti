@@ -14,7 +14,8 @@ VM options path:
 public class main {
         public static void main(String[] args) {
             glp_prob lp;
-            //glp_smcp parm;
+            glp_smcp parm;
+            int ret;
             SWIGTYPE_p_int ind;
 
             int nbCol = 4;
@@ -92,11 +93,15 @@ public class main {
 
                 // fonction objectif z
 
+                GLPK.glp_set_obj_name(lp, "z");
                 GLPK.glp_set_obj_dir(lp, GLPKConstants.GLP_MIN);
 
+                // fin
+
+             //   GLPK.glp_write_sol(lp, "p");
+               // GLPK.glp_delete_prob(lp);
                 // fin fonction objectif z
 
-                GLPK.glp_write_sol(lp, "p");
 
                 System.out.println(val);
 
