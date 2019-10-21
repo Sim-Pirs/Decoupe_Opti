@@ -6,7 +6,7 @@ public class DecoupeOpti {
     int nbCol = 0; // au début
     int nbRows = 4;
 
-    int valueConstraint[] = { 97, 610, 395, 211 };
+    double valueConstraint[] = { 97, 610, 395, 211 };
 
     List<List<Integer>> matriceXi;
     List<Integer> coefXi;

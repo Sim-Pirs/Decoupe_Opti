@@ -70,7 +70,7 @@ public class main {
                 {
                     GLPK.glp_set_col_name(lp, i, "x" + Integer.toString(i));
                     GLPK.glp_set_col_kind(lp, i, GLPKConstants.GLP_CV); //Type de la colonne
-                    GLPK.glp_set_col_bnds(lp, i, GLPKConstants.GLP_DB,0,Double.POSITIVE_INFINITY); // Bornes inf et sup
+                    GLPK.glp_set_col_bnds(lp, i, GLPKConstants.GLP_LO,0,0); // Bornes inf et sup
                 }
 
                 ind = GLPK.new_intArray(nbCol+1); //stocker les indices
@@ -78,7 +78,6 @@ public class main {
                     GLPK.intArray_setitem(ind, k, k );
                 }
                 SWIGTYPE_p_double val = GLPK.new_doubleArray(nbCol + 1); //stocker les valeurs
-
 
                // Create constraints
                GLPK.glp_add_rows(lp, nbRows);
@@ -105,6 +104,13 @@ public class main {
                         GLPK.glp_set_obj_coef(lp, i, 1);
                     }
 
+                    parm = new glp_smcp();
+                    GLPK.glp_init_smcp(parm);
+                    ret = GLPK.glp_simplex(lp, parm);
+                    if (ret != 0) {
+                        System.out.println("The problem could not be solved");
+                    }
+
                     // fin
 
                     //   GLPK.glp_write_sol(lp, "p");
@@ -122,9 +128,6 @@ public class main {
                     for (int i = 1; i <= decoupeOpti.matriceXi.size(); i++) {
                         dual.add(GLPK.glp_get_row_dual(lp, i));
                     }
-                    for (Double aDual : dual) {
-                        System.out.println(aDual);
-                    } //TODO que des 0 ?
 
                     SacADos sac = new SacADos(dual);
 
