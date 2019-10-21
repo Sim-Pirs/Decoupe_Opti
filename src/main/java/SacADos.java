@@ -18,7 +18,7 @@ public class SacADos {
 
     public List<Double> run (){
         SWIGTYPE_p_int ind;
-        glp_smcp parm;
+        glp_iocp parm;
         int ret;
 
         glp_prob s = GLPK.glp_create_prob();
@@ -54,9 +54,10 @@ public class SacADos {
             GLPK.glp_set_obj_coef(s, i, coefConstraint[i]);
         }
 
-        parm = new glp_smcp();
-        GLPK.glp_init_smcp(parm);
-        ret = GLPK.glp_simplex(s, parm);
+        parm = new glp_iocp();
+        GLPK.glp_init_iocp(parm);
+        parm.setPresolve(GLPKConstants.GLP_ON);
+        ret = GLPK.glp_intopt(s, parm);
         if (ret != 0) {
             System.out.println("The problem could not be solved");
         }
@@ -66,8 +67,6 @@ public class SacADos {
         }
         for(int i = 0; i < result.size(); i++)
             System.out.println(result.get(i));
-
-        //result = [0.0, 0.0, 0.0, 0.0] ici donc le add foncitonne mais pas les valeurs
 
         if(ret != 0){
             System.out.println("The problem could not be solved yeaaah");
