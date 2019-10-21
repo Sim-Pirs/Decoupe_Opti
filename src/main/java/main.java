@@ -116,9 +116,11 @@ public class main {
                     dual.add(GLPK.glp_get_row_dual(lp,i));
                 }
 
-                glp_prob du = GLPK.glp_create_prob();
+                SacADos sac = new SacADos(dual);
 
-
+                if(sac.run() <= 1){
+                    //break; //TODO enlever le commentaire quand on aura créé la boucle
+                }
 
                 //Continue si strictement supérieur
 
