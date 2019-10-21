@@ -22,7 +22,7 @@ public class main {
             int nbRows = 4;
 
             List <Double> dual = new ArrayList<>();
-            List resultat = new ArrayList();
+            List resultat;
 
             /* init la matrice et la liste des coef
 
@@ -87,7 +87,7 @@ public class main {
                     GLPK.glp_set_row_bnds(lp, i, GLPKConstants.GLP_FX, decoupeOpti.valueConstraint[i-1], decoupeOpti.valueConstraint[i-1]);
 
                     for (int j = 1; j <= decoupeOpti.matriceXi.size(); j++) {
-                        GLPK.doubleArray_setitem(val, i, decoupeOpti.matriceXi.get(i-1).get(j-1));
+                        GLPK.doubleArray_setitem(val, j, decoupeOpti.matriceXi.get(i-1).get(j-1));
                     }
                     GLPK.glp_set_mat_row(lp,i,decoupeOpti.matriceXi.size()-1,ind,val);
                 }
@@ -122,6 +122,9 @@ public class main {
                     for (int i = 1; i <= decoupeOpti.matriceXi.size(); i++) {
                         dual.add(GLPK.glp_get_row_dual(lp, i));
                     }
+                    for (Double aDual : dual) {
+                        System.out.println(aDual);
+                    } //TODO que des 0 ?
 
                     SacADos sac = new SacADos(dual);
 
@@ -136,6 +139,8 @@ public class main {
                         GLPK.glp_set_col_kind(lp, nbCol, GLPKConstants.GLP_CV); //Type de la colonne
                         GLPK.glp_set_col_bnds(lp, nbCol, GLPKConstants.GLP_DB,0,Double.POSITIVE_INFINITY); // Bornes inf et sup
                         decoupeOpti.addXjtoXi(resultat);
+
+
                     }
                 }
 

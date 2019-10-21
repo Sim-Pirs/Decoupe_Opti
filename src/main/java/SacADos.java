@@ -58,6 +58,12 @@ public class SacADos {
         GLPK.glp_init_smcp(parm);
         ret = GLPK.glp_simplex(s, parm);
 
+        for(int i=1;i<=dual.size();i++){
+            result.add(GLPK.glp_mip_col_val(s,i));
+        }
+
+        //result = [0.0, 0.0, 0.0, 0.0] ici donc le add foncitonne mais pas les valeurs
+
         if(ret != 0){
             System.out.println("The problem could not be solved yeaaah");
         }
@@ -74,5 +80,11 @@ public class SacADos {
             somme += coefConstraint[i] * result.get(i);
         }
         return somme;
+    }
+
+    public void afficheDual(){
+        for (Double aDual : dual) {
+            System.out.println(aDual);
+        }
     }
 }
