@@ -96,6 +96,8 @@ public class main {
 
                 // fin fonction objectif z
 
+                GLPK.glp_write_sol(lp, "p");
+
                 System.out.println(val);
 
                 GLPK.delete_intArray(ind);
@@ -108,6 +110,12 @@ public class main {
                 for(int i=1; i<=decoupeOpti.matriceXi.size();i++){
                     dual.add(GLPK.glp_get_row_dual(lp,i));
                 }
+
+                glp_prob du = GLPK.glp_create_prob();
+
+
+
+                //Continue si strictement supérieur
 
 
 
