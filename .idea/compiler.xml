@@ -6,10 +6,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Decoupe_OptiVF" />
-        <module name="Decoupe_OptiVFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF" />
         <module name="Decoupe_Opti" />
+        <module name="Decoupe_OptiVF" />
         <module name="Decoupe_OptiVFF" />
+        <module name="Decoupe_OptiVFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF" />
       </profile>
     </annotationProcessing>
   </component>

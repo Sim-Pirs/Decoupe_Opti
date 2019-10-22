@@ -27,14 +27,12 @@ public class main {
 
         try{
             while(true) {
+                initializeCoef();
                 createProb();
                 ret = solveProb();
                 if (ret != 0)
                     System.out.println("The problem could not be solved");
                 makeDual();
-
-                for(int i =0; i<dual.size(); i++)
-                    System.out.println(dual);
 
                 SacADos sac = new SacADos(dual);
                 glp_prob lpsac = sac.run();
@@ -63,7 +61,7 @@ public class main {
 
     private static void makeDual() {
         dual = new ArrayList<>();
-        for (int i = 1; i <= decoupeOpti.matriceXi.size(); i++) {
+        for (int i = 1; i <= nbCol; i++) {
             double value=GLPK.glp_get_row_dual(lp, i);
             dual.add(value);
         }
@@ -103,7 +101,7 @@ public class main {
      * init la liste des coeff : case 0 = x1, case 1 = x2 .....
      */
     public static void initializeCoef(){
-        for(int i=0; i<decoupeOpti.matriceXi.size();i++){
+        for(int i=0; i<nbCol;i++){
             decoupeOpti.addCoefXjtoListXi(1);
         }
     }
@@ -124,10 +122,11 @@ public class main {
             }
 
             SWIGTYPE_p_int ind = GLPK.new_intArray(nbCol+1); //stocker les indices
+            SWIGTYPE_p_double val = GLPK.new_doubleArray(nbCol + 1); //stocker les valeurs
+
             for(int k=1; k<=decoupeOpti.matriceXi.size();k++){
                 GLPK.intArray_setitem(ind, k, k );
             }
-            SWIGTYPE_p_double val = GLPK.new_doubleArray(nbCol + 1); //stocker les valeurs
 
             // Create constraints
             GLPK.glp_add_rows(lp, decoupeOpti.matriceXi.size());
@@ -140,12 +139,12 @@ public class main {
                     double value = decoupeOpti.matriceXi.get(j-1).get(i-1);
                     GLPK.doubleArray_setitem(val, j,value);
                 }
-                GLPK.glp_set_mat_row(lp,i,decoupeOpti.matriceXi.size(),ind,val);
+                GLPK.glp_set_mat_row(lp,i,nbCol,ind,val);
             }
             GLPK.glp_set_obj_name(lp, "z");
             GLPK.glp_set_obj_dir(lp, GLPKConstants.GLP_MIN);
 
-            for(int i = 1; i <= decoupeOpti.valueConstraint.length; i++){
+            for(int i = 1; i <= nbCol; i++){
                 GLPK.glp_set_obj_coef(lp, i, 1);
             }
             GLPK.delete_intArray(ind);

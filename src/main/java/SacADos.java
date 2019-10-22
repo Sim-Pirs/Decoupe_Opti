@@ -51,10 +51,8 @@ public class SacADos {
         for (int j = 1; j <= coefConstraint.length; j++) {
             double value= coefConstraint[j-1];
             GLPK.doubleArray_setitem(val, j,value);
-
             GLPK.glp_set_mat_row(s,1,dual.size(),ind,val);
         }
-
 
         GLPK.glp_set_obj_name(s, "z'");
         GLPK.glp_set_obj_dir(s, GLPKConstants.GLP_MAX);
