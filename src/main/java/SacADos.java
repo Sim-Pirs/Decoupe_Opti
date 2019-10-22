@@ -48,7 +48,7 @@ public class SacADos {
         GLPK.glp_set_row_name(s, 1, "c"+1);
         GLPK.glp_set_row_bnds(s, 1, GLPKConstants.GLP_DB, 0, 100);
 
-        for (int j = 1; j <= dual.size(); j++) {
+        for (int j = 1; j <= coefConstraint.length; j++) {
             double value= coefConstraint[j-1];
             GLPK.doubleArray_setitem(val, j,value);
 
@@ -81,16 +81,7 @@ public class SacADos {
         GLPK.delete_intArray(ind);
         GLPK.delete_doubleArray(val);
 
-
         return s;
-    }
-
-    double calcul(){
-        double somme = 0;
-        for(int i=0; i < result.size(); i++){
-            somme += coefConstraint[i] * result.get(i);
-        }
-        return somme;
     }
 
     public void afficheDual(){
